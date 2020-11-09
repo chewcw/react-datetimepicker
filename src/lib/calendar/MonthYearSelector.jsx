@@ -2,7 +2,7 @@ import React from 'react';
 import '../style/DateTimeRange.css';
 import { Glyphicon } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import {addFocusStyle, darkTheme, lightTheme} from '../utils/StyleUtils';
+import { addFocusStyle, darkTheme, lightTheme } from '../utils/StyleUtils';
 
 class MonthYearSelector extends React.Component {
   constructor(props) {
@@ -43,7 +43,7 @@ class MonthYearSelector extends React.Component {
   }
 
   mapToOption(variableArray) {
-    return variableArray.map(function(varInstance, i) {
+    return variableArray.map(function (varInstance, i) {
       return <option key={i}>{varInstance}</option>;
     });
   }

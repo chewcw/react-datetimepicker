@@ -563,10 +563,10 @@ class Wrapper extends React.Component {
         {this.renderPickerAutoApplyPastFriendly(ranges, local, maxDate, false)}
         {this.renderStandalone(ranges, local, maxDate, false)}
       </div>
-    let pickers; 
+    let pickers;
     if(this.state.secondDisplay) {
       pickers =  this.renderPickerAutoApplySmartModeDisabledSecondsIncluded(ranges, local, maxDate, true);
-    } 
+    }
     else if(this.state.timezoneDisplay) {
       pickers = this.renderTimezonePicker(ranges, local, maxDate);
     }

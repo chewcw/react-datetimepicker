@@ -61,11 +61,11 @@ class DateTimeRangePicker extends React.Component {
     let isDifferentTime = this.props.start.format('DD-MM-YYYY HH:mm') !== prevProps.start.format('DD-MM-YYYY HH:mm') || this.props.end.format('DD-MM-YYYY HH:mm') !== prevProps.end.format('DD-MM-YYYY HH:mm')
     if (isDifferentMomentObject || isDifferentTime) {
       this.setState({
-        start : this.props.start,
-        end : this.props.end
+        start: this.props.start,
+        end: this.props.end
       },
-      this.updateStartEndAndLabels(this.props.start, this.props.end, true)
-    )
+        this.updateStartEndAndLabels(this.props.start, this.props.end, true)
+      )
     }
   }
 
@@ -134,13 +134,13 @@ class DateTimeRangePicker extends React.Component {
       end: newEnd,
       endLabel: newEnd.format(this.state.momentFormat),
     }, () => {
-      if(updateCalendar){
+      if (updateCalendar) {
         this.updateCalendarRender();
       }
     });
   }
 
-  updateCalendarRender(){
+  updateCalendarRender() {
     this.dateTextFieldCallback("start");
     this.dateTextFieldCallback("end");
   }
@@ -497,7 +497,7 @@ class DateTimeRangePicker extends React.Component {
 
   render() {
     return (
-      <Fragment>
+      <div>
         <Ranges
           ranges={this.state.ranges}
           selectedRange={this.state.selectedRange}
@@ -507,9 +507,11 @@ class DateTimeRangePicker extends React.Component {
           noMobileMode={this.props.noMobileMode}
           forceMobileMode={this.props.forceMobileMode}
         />
-        {this.renderStartDate(this.props.local)}
-        {this.renderEndDate(this.props.local)}
-      </Fragment>
+        <div className="startEndDateContainer">
+          {this.renderStartDate(this.props.local)}
+          {this.renderEndDate(this.props.local)}
+        </div>
+      </div>
     );
   }
 }

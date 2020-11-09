@@ -228,7 +228,7 @@ export const invalidStyle = darkMode => {
 };
 
 export const rangeButtonSelectedStyle = () => ({
-  color: '#f5f5f5',
+  color: '#005591',
   fontSize: '13px',
   border: '1px solid #f5f5f5',
   borderRadius: '4px',

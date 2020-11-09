@@ -149,7 +149,7 @@ class ApplyCancelButtons extends React.Component {
         { backgroundColor: this.state.hoverColourApply },
         this.applyOnKeyPress,
         this.applyOnFocus,
-        this.applyOnBlur,        
+        this.applyOnBlur,
         (this.props.local && this.props.local.apply) ? this.props.local.apply : 'Apply'
       );
       closeButtonText = (this.props.local && this.props.local.cancel) ? this.props.local.cancel : 'Cancel';
@@ -182,7 +182,7 @@ class ApplyCancelButtons extends React.Component {
     }
     return (
       <div id="buttonContainer" className="buttonContainer" style={style}>
-        {maxDateBox}
+        {/* {maxDateBox} */}
         {buttons}
       </div>
     );
