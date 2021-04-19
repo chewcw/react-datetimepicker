@@ -153,6 +153,7 @@ class DateTimeRangeContainer extends React.Component {
         standalone={this.props.standalone}
         twelveHoursClock={this.props.twelveHoursClock == true}
         timezone={this.props.timezone}
+        applyClassName={this.props.applyClassName}
       />
     );
   }
@@ -214,6 +215,7 @@ DateTimeRangeContainer.propTypes = {
   standalone: PropTypes.bool,
   twelveHoursClock: PropTypes.bool,
   timezone: PropTypes.string,
+  applyClassName: PropTypes.string,
 };
 
 export default DateTimeRangeContainer;
