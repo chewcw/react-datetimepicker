@@ -1,7 +1,7 @@
 import React from 'react';
 import './style/DateTimeRange.css';
 import Fragment from 'react-dot-fragment';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import PropTypes from 'prop-types';
 import momentPropTypes from 'react-moment-proptypes';
 import Ranges from './ranges/Ranges';
@@ -29,10 +29,10 @@ class DateTimeRangePicker extends React.Component {
       selectedRange: 0,
       selectingModeFrom: true,
       ranges: ranges,
-      start: this.props.start,
-      startLabel: this.props.start.format(localMomentFormat),
-      end: this.props.end,
-      endLabel: this.props.end.format(localMomentFormat),
+      start: this.props.timezone ? moment(this.props.start).tz(this.props.timezone) : this.props.start,
+      startLabel: this.props.timezone ? this.props.start.tz(this.props.timezone).format(localMomentFormat) : this.props.start.format(localMomentFormat),
+      end: this.props.timezone ? moment(this.props.end).tz(this.props.timezone) : this.props.end,
+      endLabel: this.props.timezone ? this.props.end.tz(this.props.timezone).format(localMomentFormat) : this.props.end.format(localMomentFormat),
       focusDate: false,
       momentFormat: localMomentFormat,
     };
@@ -165,6 +165,12 @@ class DateTimeRangePicker extends React.Component {
     let endDate = newDates.endDate;
     let newStart = this.duplicateMomentTimeFromState(startDate, true);
     let newEnd = this.duplicateMomentTimeFromState(endDate, false);
+
+    if (this.props.timezone) {
+      newStart = moment(newStart).tz(this.props.timezone);
+      newEnd = moment(newEnd).tz(this.props.timezone);
+    }
+
     this.updateStartEndAndLabels(newStart, newEnd);
     this.setToRangeValue(newStart, newEnd);
     // If Smart Mode is active change the selecting mode to opposite of what was just pressed
@@ -262,12 +268,18 @@ class DateTimeRangePicker extends React.Component {
   dateTextFieldCallback(mode) {
     if (mode === 'start') {
       let newDate = moment(this.state.startLabel, this.state.momentFormat);
+      if (this.props.timezone) {
+        newDate = moment(newDate).tz(this.props.timezone);
+      }
       let isValidNewDate = newDate.isValid();
       let isSameOrBeforeEnd = newDate.isSameOrBefore(this.state.end, 'second');
       let isAfterEndDate = newDate.isAfter(this.state.end);
       this.updateDate(mode, newDate, isValidNewDate, isSameOrBeforeEnd, isAfterEndDate, 'start', 'startLabel');
     } else {
       let newDate = moment(this.state.endLabel, this.state.momentFormat);
+      if (this.props.timezone) {
+        newDate = moment(newDate).tz(this.props.timezone);
+      }
       let isValidNewDate = newDate.isValid();
       let isBeforeStartDate = newDate.isBefore(this.state.start);
       let isSameOrAfterStartDate = newDate.isSameOrAfter(this.state.start, 'second');
@@ -429,8 +441,8 @@ class DateTimeRangePicker extends React.Component {
     return (
       <DatePicker
         label={label}
-        date={this.state.start}
-        otherDate={this.state.end}
+        date={this.props.timezone ? this.state.start.tz(this.props.timezone) : this.state.start}
+        otherDate={this.props.timezone ? this.state.end.tz(this.props.timezone) : this.state.end}
         mode={ModeEnum.start}
         dateSelectedNoTimeCallback={this.dateSelectedNoTimeCallback}
         timeChangeCallback={this.timeChangeCallback}
@@ -454,6 +466,7 @@ class DateTimeRangePicker extends React.Component {
         darkMode={this.props.darkMode}
         standalone={this.props.standalone}
         twelveHoursClock={this.props.twelveHoursClock}
+        timezone={this.props.timezone}
       />
     );
   }
@@ -491,6 +504,7 @@ class DateTimeRangePicker extends React.Component {
         darkMode={this.props.darkMode}
         standalone={this.props.standalone}
         twelveHoursClock={this.props.twelveHoursClock}
+        timezone={this.props.timezone}
       />
     );
   }
@@ -536,7 +550,8 @@ DateTimeRangePicker.propTypes = {
   noMobileMode: PropTypes.bool,
   forceMobileMode: PropTypes.bool,
   standalone: PropTypes.bool,
-  twelveHoursClock: PropTypes.bool
+  twelveHoursClock: PropTypes.bool,
+  timezone: PropTypes.string,
 };
 
 export { DateTimeRangePicker };

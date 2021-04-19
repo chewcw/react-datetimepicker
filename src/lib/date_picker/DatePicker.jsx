@@ -1,6 +1,6 @@
 import React from 'react';
 import '../style/DateTimeRange.css';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import PropTypes from 'prop-types';
 import momentPropTypes from 'react-moment-proptypes';
 import Label from './Label';
@@ -11,6 +11,14 @@ import ApplyCancelButtons from './ApplyCancelButtons';
 import ActiveNotifier from './ActiveNotifier';
 
 class DatePicker extends React.Component {
+
+  getDate(date) {
+    if (this.props.timezone) {
+      return moment(date).tz(this.props.timezone);
+    }
+    return moment(date);
+  }
+
   render() {
     //If button property present display buttons
     let buttons;
@@ -31,7 +39,7 @@ class DatePicker extends React.Component {
         <div className="fromDateHourContainer">
           <Label label={this.props.label} />
           <DateField
-            date={moment(this.props.date)}
+            date={this.getDate(this.props.date)}
             dateTextFieldCallback={this.props.dateTextFieldCallback}
             onChangeDateTextHandlerCallback={
               this.props.onChangeDateTextHandlerCallback
@@ -42,7 +50,7 @@ class DatePicker extends React.Component {
             darkMode={this.props.darkMode}
           />
           <TimeField
-            date={this.props.date}
+            date={this.getDate(this.props.date)}
             timeChangeCallback={this.props.timeChangeCallback}
             mode={this.props.mode}
             darkMode={this.props.darkMode}
@@ -50,9 +58,9 @@ class DatePicker extends React.Component {
           />
         </div>
         <Calendar
-          date={this.props.date}
+          date={this.getDate(this.props.date)}
           mode={this.props.mode}
-          otherDate={this.props.otherDate}
+          otherDate={this.getDate(this.props.otherDate)}
           maxDate={this.props.maxDate}
           dateSelectedNoTimeCallback={this.props.dateSelectedNoTimeCallback}
           keyboardCellCallback={this.props.keyboardCellCallback}
@@ -109,6 +117,7 @@ DatePicker.propTypes = {
   style: PropTypes.object,
   darkMode: PropTypes.bool,
   standalone: PropTypes.bool,
-  twelveHoursClock: PropTypes.bool
+  twelveHoursClock: PropTypes.bool,
+  timezone: PropTypes.string,
 };
 export default DatePicker;
