@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import '../style/DateTimeRange.css';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import PropTypes from 'prop-types';
 import momentPropTypes from 'react-moment-proptypes';
 import {
@@ -33,8 +33,11 @@ class Cell extends React.Component {
   }
 
   componentDidUpdate(oldProps) {
-    let isDifferentMomentObject = !oldProps.date.isSame(this.props.date) || !oldProps.otherDate.isSame(this.props.otherDate);
-    let isDifferentTime = this.props.date.format('DD-MM-YYYY HH:mm') !== oldProps.date.format('DD-MM-YYYY HH:mm') || this.props.otherDate.format('DD-MM-YYYY HH:mm') !== oldProps.otherDate.format('DD-MM-YYYY HH:mm')
+    const prevTimezone = oldProps.timezone;
+    const timezone = this.props.timezone;
+
+    let isDifferentMomentObject = !oldProps.date.tz(prevTimezone).isSame(this.props.date.tz(timezone)) || !oldProps.otherDate.tz(prevTimezone).isSame(this.props.otherDate.tz(timezone));
+    let isDifferentTime = this.props.date.tz(timezone).format('DD-MM-YYYY HH:mm') !== oldProps.date.tz(prevTimezone).format('DD-MM-YYYY HH:mm') || this.props.otherDate.tz(timezone).format('DD-MM-YYYY HH:mm') !== oldProps.otherDate.tz(prevTimezone).format('DD-MM-YYYY HH:mm')
 
     if (isDifferentMomentObject || isDifferentTime) {
       this.styleCellNonMouseEnter();
@@ -65,12 +68,14 @@ class Cell extends React.Component {
   }
 
   pastMaxDatePropsChecker(isCellDateProp, days) {
+    const timezone = this.props.timezone;
+
     if (isCellDateProp) {
-      if (pastMaxDate(moment(this.props.date).add(days, 'days'), this.props.maxDate, true)) {
+      if (pastMaxDate(moment(this.props.date.tz(timezone).add(days, 'days'), this.props.maxDate, true))) {
         return true;
       }
     } else {
-      if (pastMaxDate(moment(this.props.otherDate).add(days, 'days'), this.props.maxDate, true)) {
+      if (pastMaxDate(moment(this.props.otherDate.tz(timezone)).add(days, 'days'), this.props.maxDate, true)) {
         return true;
       }
     }
@@ -83,7 +88,7 @@ class Cell extends React.Component {
       e.preventDefault();
       let newDate = moment(this.props.cellDay);
       // Check to see if this cell is the date prop
-      let isCellDateProp = this.props.cellDay.isSame(this.props.date, 'day');
+      let isCellDateProp = this.props.cellDay.isSame(this.props.date.tz(this.props.timezone), 'day');
       if (e.keyCode === 38) {
         // Up Key
         newDate.subtract(7, 'days');
@@ -114,7 +119,7 @@ class Cell extends React.Component {
     if (pastMaxDate(this.props.cellDay, this.props.maxDate, false)) {
       return;
     }
-    this.props.dateSelectedNoTimeCallback(this.props.cellDay, this.props.mode);
+    this.props.dateSelectedNoTimeCallback(this.props.cellDay.tz(this.props.timezone), this.props.mode);
   }
 
   mouseEnter() {
@@ -132,8 +137,9 @@ class Cell extends React.Component {
       return this.setState({ style: style });
     }
     // Hover Style Cell, Different if inbetween start and end date
-    let isDateStart = this.props.date.isSameOrBefore(this.props.otherDate, 'second');
-    if (isInbetweenDates(isDateStart, this.props.cellDay, this.props.date, this.props.otherDate)) {
+    const timezone = this.props.timezone;
+    let isDateStart = this.props.date.tz(timezone).isSameOrBefore(this.props.otherDate.tz(timezone), 'second');
+    if (isInbetweenDates(isDateStart, this.props.cellDay, this.props.date.tz(timezone), this.props.otherDate.tz(timezone))) {
       this.setState({ style: hoverCellStyle(true, this.props.darkMode) });
     } else {
       this.setState({ style: hoverCellStyle(false, this.props.darkMode) });
@@ -188,14 +194,14 @@ class Cell extends React.Component {
     if (this.props.mode === ModeEnum.start) {
       // We know now the date prop is the start date and the otherDate is the end date in non smart mode
       // If this cell is after end date then invalid cell as this is the start mode
-      if (cellDate.isAfter(this.props.otherDate, 'day')) {
+      if (cellDate.isAfter(this.props.otherDate.tz(this.props.timezone), 'day')) {
         this.setState({ style: invalidStyle(this.props.darkMode) });
         return true;
       }
     } else if (this.props.mode === ModeEnum.end) {
       // We know now the date prop is the end date and the otherDate is the start date in non smart mode
       // If this cell is before start date then invalid cell as this is the end mode
-      if (cellDate.isBefore(this.props.otherDate, 'day')) {
+      if (cellDate.isBefore(this.props.otherDate.tz(this.props.timezone), 'day')) {
         this.setState({ style: invalidStyle(this.props.darkMode) });
         return true;
       }
@@ -205,8 +211,8 @@ class Cell extends React.Component {
 
   styleCellNonMouseEnter() {
     let cellDay = this.props.cellDay;
-    let date = this.props.date;
-    let otherDate = this.props.otherDate;
+    let date = this.props.date.tz(this.props.timezone);
+    let otherDate = this.props.otherDate.tz(this.props.timezone);
 
     // If Past Max Date Style Cell Out of Use
     if (this.checkAndSetMaxDateStyle(cellDay)) {
@@ -254,8 +260,8 @@ class Cell extends React.Component {
 
   isStartOrEndDate() {
     let cellDay = this.props.cellDay;
-    let date = this.props.date;
-    let otherDate = this.props.otherDate;
+    let date = this.props.date.tz(this.props.timezone);
+    let otherDate = this.props.otherDate.tz(this.props.timezone);
     if (
       this.shouldStyleCellStartEnd(cellDay, date, otherDate, true, false) ||
       this.shouldStyleCellStartEnd(cellDay, date, otherDate, false, true)
@@ -313,5 +319,6 @@ Cell.propTypes = {
   smartMode: PropTypes.bool,
   style: PropTypes.object,
   darkMode: PropTypes.bool,
+  timezone: PropTypes.string,
 };
 export default Cell;

@@ -1,4 +1,4 @@
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { ModeEnum } from '../DateTimeRangePicker';
 
 export const generateHours = () => {
@@ -116,9 +116,9 @@ const getDaysBeforeStart = (firstDayOfMonth, sundayFirst) => {
   }
 };
 
-export const getFourtyTwoDays = (initMonth, initYear, sundayFirst) => {
+export const getFourtyTwoDays = (initMonth, initYear, sundayFirst, timezone) => {
   let fourtyTwoDays = [];
-  let firstDayOfMonth = moment(new Date(initYear, initMonth, 1));
+  let firstDayOfMonth = moment(new Date(initYear, initMonth, 1)).tz(timezone);
 
   fourtyTwoDays = getDaysBeforeStart(firstDayOfMonth, sundayFirst);
   // Add in all days this month
@@ -126,7 +126,7 @@ export const getFourtyTwoDays = (initMonth, initYear, sundayFirst) => {
     fourtyTwoDays.push(firstDayOfMonth.clone().add(i, 'd'));
   }
   // Add in all days at the end of the month until last day of week seen
-  let lastDayOfMonth = moment(new Date(initYear, initMonth, firstDayOfMonth.daysInMonth()));
+  let lastDayOfMonth = moment(new Date(initYear, initMonth, firstDayOfMonth.daysInMonth())).tz(timezone);
   let toAdd = 1;
   let gotAllDays = false;
   while (!gotAllDays) {

@@ -3,6 +3,7 @@ import '../style/DateTimeRange.css';
 import { InputGroup, FormControl, Glyphicon } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import {darkTheme, lightTheme} from "../utils/StyleUtils";
+import moment from 'moment-timezone';
 
 class DateField extends React.Component {
   constructor(props) {
@@ -45,7 +46,7 @@ class DateField extends React.Component {
           id={"DateTimeInput_" + this.props.mode}
           style={theme}
           type="text"
-          value={this.props.dateLabel}
+          value={moment(this.props.dateLabel).tz(this.props.timezone).format(this.props.momentFormat)}
           onChange={this.onChangeDateTextHandler}
           onBlur={this.onBlur}
         />
@@ -61,5 +62,7 @@ DateField.propTypes = {
   dateTextFieldCallback: PropTypes.func.isRequired,
   onChangeDateTextHandlerCallback: PropTypes.func.isRequired,
   darkMode: PropTypes.bool,
+  timezone: PropTypes.string,
+  momentFormat: PropTypes.string,
 };
 export default DateField;

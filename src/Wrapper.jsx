@@ -20,6 +20,18 @@ class Wrapper extends React.Component {
 
     this.onClick = this.onClick.bind(this);
     this.applyCallback = this.applyCallback.bind(this);
+
+    const format = "YYYY-MM-DD HH:mmZ"
+
+    let curr = moment();
+    let currAus = moment().tz("Australia/Perth");
+    let currAus2 = moment(currAus).tz("Australia/Perth");
+    let currAus3 = moment(currAus2).tz("Australia/Perth");
+
+    console.log(curr);
+    console.log(currAus.format("YYYY-MM-DD HH:mm"));
+    console.log(moment(currAus2));
+    console.log(currAus.isSame(currAus3));
   }
 
   applyCallback(startDate, endDate) {
@@ -81,7 +93,7 @@ class Wrapper extends React.Component {
   }
 
   renderTimezonePicker(ranges, local, maxDate) {
-    let value = `${this.state.start.format('DD-MM-YYYY HH:mm')} - ${this.state.end.format('DD-MM-YYYY HH:mm')}`;
+    let value = `${this.state.start.format('DD-MM-YYYY HH:mmZ')} - ${this.state.end.format('DD-MM-YYYY HH:mmZ')}`;
     let firefoxBelow35 = isFirefoxBelow53();
     let disabled = true;
     if (firefoxBelow35) {
@@ -91,7 +103,7 @@ class Wrapper extends React.Component {
       <div>
         <div style={{display: 'flex'}}>
           <button id={'Timezone-Click-Button'} onClick={() => {
-            let timezone = "Asia/Tokyo";
+            let timezone = "Australia/Perth";
             this.setState((state, props) => ({
               timezone: timezone,
               start: moment(state.start).tz(timezone),
@@ -100,7 +112,7 @@ class Wrapper extends React.Component {
             }}>
             Click Me to change Timezone
           </button>
-          <div> Allows you to change timezone, this example is Japan Tokyo </div>
+          <div> Allows you to change timezone, this example is Australia Perth</div>
         </div>
         <br />
         <div id="DateTimeRangeContainerTimezone">
@@ -108,11 +120,18 @@ class Wrapper extends React.Component {
             ranges={ranges}
             start={this.state.start}
             end={this.state.end}
-            local={local}
-            maxDate={maxDate}
+            // local={local}
+            // maxDate={maxDate}
             applyCallback={this.applyCallback}
             rangeCallback={this.rangeCallback}
-            smartMode
+            // smartMode
+            standalone
+            autoApply
+            local={{
+              format: "YYYY-MM-DD HH:mmZ",
+              sundayFirst: false,
+            }}
+            timezone="Australia/Perth"
           >
             <FormControl
               id="formControlsTextB"
@@ -553,7 +572,7 @@ class Wrapper extends React.Component {
     let maxDate = moment(end).add(24, 'hour');
     let pickersRender = <div>
       <br />
-        {this.renderVanillaPicker(ranges, local, maxDate)}
+        {/* {this.renderVanillaPicker(ranges, local, maxDate)}
         {this.renderGridPicker(ranges, local, maxDate)}
         {this.renderGridPickerNoMobileMode(ranges, local, maxDate)}
         {this.renderGridPickerForceMobileMode(ranges, local, maxDate)}
@@ -561,20 +580,20 @@ class Wrapper extends React.Component {
         {this.renderPickerAutoApplySmartModeDisabled(ranges, local, maxDate, true)}}
         {this.renderPickerSmartModeDisabledCustomStyling(ranges, local, maxDate, true)}
         {this.renderPickerAutoApplyPastFriendly(ranges, local, maxDate, false)}
-        {this.renderStandalone(ranges, local, maxDate, false)}
+        {this.renderStandalone(ranges, local, maxDate, false)} */}
       </div>
-    let pickers; 
+    let pickers;
     if(this.state.secondDisplay) {
-      pickers =  this.renderPickerAutoApplySmartModeDisabledSecondsIncluded(ranges, local, maxDate, true);
-    } 
+      // pickers =  this.renderPickerAutoApplySmartModeDisabledSecondsIncluded(ranges, local, maxDate, true);
+    }
     else if(this.state.timezoneDisplay) {
       pickers = this.renderTimezonePicker(ranges, local, maxDate);
     }
     else if(this.state.twelveHour) {
-      pickers =  this.renderTwelveHourPicker(ranges, local, maxDate, true);
+      // pickers =  this.renderTwelveHourPicker(ranges, local, maxDate, true);
     }
     else{
-      pickers = pickersRender;
+      // pickers = pickersRender;
     }
     return (
       <div className="container">

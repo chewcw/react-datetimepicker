@@ -1,7 +1,7 @@
 import React from 'react';
 import './style/DateTimeRange.css';
 import Fragment from 'react-dot-fragment';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import PropTypes from 'prop-types';
 import momentPropTypes from 'react-moment-proptypes';
 import Ranges from './ranges/Ranges';
@@ -454,6 +454,7 @@ class DateTimeRangePicker extends React.Component {
         darkMode={this.props.darkMode}
         standalone={this.props.standalone}
         twelveHoursClock={this.props.twelveHoursClock}
+        timezone={this.props.timezone}
       />
     );
   }
@@ -491,6 +492,7 @@ class DateTimeRangePicker extends React.Component {
         darkMode={this.props.darkMode}
         standalone={this.props.standalone}
         twelveHoursClock={this.props.twelveHoursClock}
+        timezone={this.props.timezone}
       />
     );
   }
@@ -534,7 +536,8 @@ DateTimeRangePicker.propTypes = {
   noMobileMode: PropTypes.bool,
   forceMobileMode: PropTypes.bool,
   standalone: PropTypes.bool,
-  twelveHoursClock: PropTypes.bool
+  twelveHoursClock: PropTypes.bool,
+  timezone: PropTypes.string,
 };
 
 export { DateTimeRangePicker };

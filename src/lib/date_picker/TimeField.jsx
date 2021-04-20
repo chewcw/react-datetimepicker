@@ -70,9 +70,9 @@ class TimeField extends React.Component {
   handleHourChange(event) {
     this.props.timeChangeCallback(
       this.props.twelveHoursClock
-        ? this.convertHourUsingMeridiem(parseInt(event.target.value), this.props.date.format('a'))
+        ? this.convertHourUsingMeridiem(parseInt(event.target.value), this.props.date.tz(this.props.timezone).format('a'))
         : parseInt(event.target.value),
-      this.props.date.minute(),
+      this.props.date.tz(this.props.timezone).minute(),
       this.props.mode,
     );
   }
@@ -83,8 +83,8 @@ class TimeField extends React.Component {
 
   handleMeridiemChange(event) {
     this.props.timeChangeCallback(
-      this.convertHourUsingMeridiem(parseInt(this.props.date.format('h')), event.target.value),
-      this.props.date.minute(),
+      this.convertHourUsingMeridiem(parseInt(this.props.date.tz(this.props.timezone).format('h')), event.target.value),
+      this.props.date.tz(this.props.timezone).minute(),
       this.props.mode,
     );
   }
@@ -119,9 +119,9 @@ class TimeField extends React.Component {
     let hours = this.generateHourSelectValues();
     let minutes = this.generateMinuteSelectValues();
     let meridiems = this.generateMeridiemSelectValues();
-    let hour = this.props.twelveHoursClock ? parseInt(this.props.date.format('h')) : this.props.date.hour();
-    let minute = this.props.date.minute();
-    let meridiem = this.props.date.format('a');
+    let hour = this.props.twelveHoursClock ? parseInt(this.props.date.tz(this.props.timezone).format('h')) : this.props.date.tz(this.props.timezone).hour();
+    let minute = this.props.date.tz(this.props.timezone).minute();
+    let meridiem = this.props.date.tz(this.props.timezone).format('a');
 
     let hourFocusStyle = {};
     hourFocusStyle = addFocusStyle(this.state.hourFocus, hourFocusStyle);
@@ -161,5 +161,6 @@ TimeField.propTypes = {
   date: momentPropTypes.momentObj,
   darkMode: PropTypes.bool,
   twelveHoursClock: PropTypes.bool,
+  timezone: PropTypes.string,
 };
 export default TimeField;

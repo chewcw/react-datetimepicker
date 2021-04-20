@@ -1,6 +1,6 @@
 import React from 'react';
 import '../style/DateTimeRange.css';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import PropTypes from 'prop-types';
 import momentPropTypes from 'react-moment-proptypes';
 import Label from './Label';
@@ -31,7 +31,6 @@ class DatePicker extends React.Component {
         <div className="fromDateHourContainer">
           <Label label={this.props.label} />
           <DateField
-            date={moment(this.props.date)}
             dateTextFieldCallback={this.props.dateTextFieldCallback}
             onChangeDateTextHandlerCallback={
               this.props.onChangeDateTextHandlerCallback
@@ -40,6 +39,8 @@ class DatePicker extends React.Component {
             mode={this.props.mode}
             changeSelectingModeCallback={this.props.changeSelectingModeCallback}
             darkMode={this.props.darkMode}
+            timezone={this.props.timezone}
+            momentFormat="YYYY-MM-DD HH:mmZ"
           />
           <TimeField
             date={this.props.date}
@@ -47,6 +48,7 @@ class DatePicker extends React.Component {
             mode={this.props.mode}
             darkMode={this.props.darkMode}
             twelveHoursClock={this.props.twelveHoursClock}
+            timezone={this.props.timezone}
           />
         </div>
         <Calendar
@@ -66,6 +68,7 @@ class DatePicker extends React.Component {
           smartMode={this.props.smartMode}
           style={this.props.style}
           darkMode={this.props.darkMode}
+          timezone={this.props.timezone}
         />
         <ActiveNotifier
           selectingModeFrom={this.props.selectingModeFrom}
@@ -109,6 +112,7 @@ DatePicker.propTypes = {
   style: PropTypes.object,
   darkMode: PropTypes.bool,
   standalone: PropTypes.bool,
-  twelveHoursClock: PropTypes.bool
+  twelveHoursClock: PropTypes.bool,
+  timezone: PropTypes.string,
 };
 export default DatePicker;
