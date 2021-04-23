@@ -141,6 +141,7 @@ class RangeButton extends React.Component {
     style = Object.assign(style, this.state.style);
     return (
       <div
+      className="rangebuttonstyle"
         ref={button => {
           this.button = button;
         }}

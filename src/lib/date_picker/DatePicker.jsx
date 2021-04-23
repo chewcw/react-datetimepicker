@@ -11,6 +11,14 @@ import ApplyCancelButtons from './ApplyCancelButtons';
 import ActiveNotifier from './ActiveNotifier';
 
 class DatePicker extends React.Component {
+
+  getDate(date) {
+    if (this.props.timezone) {
+      return moment(date).tz(this.props.timezone);
+    }
+    return moment(date);
+  }
+
   render() {
     //If button property present display buttons
     let buttons;
@@ -23,6 +31,7 @@ class DatePicker extends React.Component {
           maxDate={this.props.maxDate}
           autoApply={this.props.autoApply}
           standalone={this.props.standalone}
+          applyClassName={this.props.applyClassName}
         />
       );
     }
@@ -43,7 +52,7 @@ class DatePicker extends React.Component {
             momentFormat="YYYY-MM-DD HH:mmZ"
           />
           <TimeField
-            date={this.props.date}
+            date={this.getDate(this.props.date)}
             timeChangeCallback={this.props.timeChangeCallback}
             mode={this.props.mode}
             darkMode={this.props.darkMode}
@@ -52,9 +61,9 @@ class DatePicker extends React.Component {
           />
         </div>
         <Calendar
-          date={this.props.date}
+          date={this.getDate(this.props.date)}
           mode={this.props.mode}
-          otherDate={this.props.otherDate}
+          otherDate={this.getDate(this.props.otherDate)}
           maxDate={this.props.maxDate}
           dateSelectedNoTimeCallback={this.props.dateSelectedNoTimeCallback}
           keyboardCellCallback={this.props.keyboardCellCallback}
@@ -70,13 +79,13 @@ class DatePicker extends React.Component {
           darkMode={this.props.darkMode}
           timezone={this.props.timezone}
         />
-        <ActiveNotifier
+        {/* <ActiveNotifier
           selectingModeFrom={this.props.selectingModeFrom}
           mode={this.props.mode}
           smartMode={this.props.smartMode}
           style={this.props.style}
           local={this.props.local}
-        />
+        /> */}
         {buttons}
       </div>
     );

@@ -29,10 +29,10 @@ class DateTimeRangePicker extends React.Component {
       selectedRange: 0,
       selectingModeFrom: true,
       ranges: ranges,
-      start: this.props.start,
-      startLabel: this.props.start.format(localMomentFormat),
-      end: this.props.end,
-      endLabel: this.props.end.format(localMomentFormat),
+      start: this.props.timezone ? moment(this.props.start).tz(this.props.timezone) : this.props.start,
+      startLabel: this.props.timezone ? this.props.start.tz(this.props.timezone).format(localMomentFormat) : this.props.start.format(localMomentFormat),
+      end: this.props.timezone ? moment(this.props.end).tz(this.props.timezone) : this.props.end,
+      endLabel: this.props.timezone ? this.props.end.tz(this.props.timezone).format(localMomentFormat) : this.props.end.format(localMomentFormat),
       focusDate: false,
       momentFormat: localMomentFormat,
     };
@@ -76,7 +76,13 @@ class DateTimeRangePicker extends React.Component {
 
   checkAutoApplyActiveApplyIfActive(startDate, endDate) {
     if (this.props.autoApply) {
-      this.props.applyCallback(startDate, endDate);
+      let newStartDate = startDate;
+      let newEndDate = endDate;
+      if (this.props.timezone) {
+        newStartDate = moment(startDate).tz(this.props.timezone);
+        newEndDate = moment(endDate).tz(this.props.timezone);
+      }
+      this.props.applyCallback(newStartDate, newEndDate);
     }
   }
 
@@ -129,18 +135,18 @@ class DateTimeRangePicker extends React.Component {
 
   updateStartEndAndLabels(newStart, newEnd, updateCalendar) {
     this.setState({
-      start: newStart,
-      startLabel: newStart.format(this.state.momentFormat),
-      end: newEnd,
-      endLabel: newEnd.format(this.state.momentFormat),
+      start: this.props.timezone ? moment(newStart).tz(this.props.timezone) : newStart,
+      startLabel: this.props.timezone ? moment(newStart).tz(this.props.timezone).format(this.state.momentFormat) : newStart.format(this.state.momentFormat),
+      end: this.props.timezone ? moment(newEnd).tz(this.props.timezone) : newEnd,
+      endLabel: this.props.timezone ? moment(newEnd).tz(this.props.timezone).format(this.state.momentFormat) : newEnd.format(this.state.momentFormat),
     }, () => {
-      if(updateCalendar){
+      if (updateCalendar) {
         this.updateCalendarRender();
       }
     });
   }
 
-  updateCalendarRender(){
+  updateCalendarRender() {
     this.dateTextFieldCallback("start");
     this.dateTextFieldCallback("end");
   }
@@ -435,8 +441,8 @@ class DateTimeRangePicker extends React.Component {
     return (
       <DatePicker
         label={label}
-        date={this.state.start}
-        otherDate={this.state.end}
+        date={this.props.timezone ? this.state.start.tz(this.props.timezone) : this.state.start}
+        otherDate={this.props.timezone ? this.state.end.tz(this.props.timezone) : this.state.end}
         mode={ModeEnum.start}
         dateSelectedNoTimeCallback={this.dateSelectedNoTimeCallback}
         timeChangeCallback={this.timeChangeCallback}
@@ -505,7 +511,7 @@ class DateTimeRangePicker extends React.Component {
 
   render() {
     return (
-      <Fragment>
+      <div>
         <Ranges
           ranges={this.state.ranges}
           selectedRange={this.state.selectedRange}
@@ -515,9 +521,11 @@ class DateTimeRangePicker extends React.Component {
           noMobileMode={this.props.noMobileMode}
           forceMobileMode={this.props.forceMobileMode}
         />
-        {this.renderStartDate(this.props.local)}
-        {this.renderEndDate(this.props.local)}
-      </Fragment>
+        <div className="startEndDateContainer">
+          {this.renderStartDate(this.props.local)}
+          {this.renderEndDate(this.props.local)}
+        </div>
+      </div>
     );
   }
 }
