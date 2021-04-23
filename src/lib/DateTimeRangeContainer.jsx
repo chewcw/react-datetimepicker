@@ -214,8 +214,8 @@ DateTimeRangeContainer.propTypes = {
   leftMode: PropTypes.bool,
   standalone: PropTypes.bool,
   twelveHoursClock: PropTypes.bool,
-  applyClassName: PropTypes.string,
   timezone: PropTypes.string.isRequired,
+  applyClassName: PropTypes.string,
 };
 
 export default DateTimeRangeContainer;

@@ -123,5 +123,6 @@ DatePicker.propTypes = {
   standalone: PropTypes.bool,
   twelveHoursClock: PropTypes.bool,
   timezone: PropTypes.string,
+  applyClassName: PropTypes.string,
 };
 export default DatePicker;
