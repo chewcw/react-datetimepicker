@@ -64,8 +64,8 @@ class DateTimeRangePicker extends React.Component {
         start : this.props.start,
         end : this.props.end
       },
-      this.updateStartEndAndLabels(this.props.start, this.props.end, true)
-    )
+        this.updateStartEndAndLabels(this.props.start, this.props.end, true)
+      )
     }
   }
 
@@ -163,17 +163,22 @@ class DateTimeRangePicker extends React.Component {
     // unpack the new dates and set them
     let startDate = newDates.startDate;
     let endDate = newDates.endDate;
-    let newStart = this.duplicateMomentTimeFromState(startDate, true);
-    let newEnd = this.duplicateMomentTimeFromState(endDate, false);
-    this.updateStartEndAndLabels(newStart, newEnd);
-    this.setToRangeValue(newStart, newEnd);
+    // let newStart = this.duplicateMomentTimeFromState(startDate, true);
+    // let newEnd = this.duplicateMomentTimeFromState(endDate, false);
+    // this.updateStartEndAndLabels(newStart, newEnd);
+    this.updateStartEndAndLabels(startDate, endDate);
+    // this.setToRangeValue(newStart, newEnd);
+    this.setToRangeValue(startDate, endDate);
     // If Smart Mode is active change the selecting mode to opposite of what was just pressed
     if (this.props.smartMode) {
       this.setState(prevState => ({
         selectingModeFrom: !prevState.selectingModeFrom,
       }));
     }
-    this.checkAutoApplyActiveApplyIfActive(newStart, newEnd);
+    // console.log(startDate.format('YYYY-MM-DD HH:mmZ'));
+    // console.log(newStart.format('YYYY-MM-DD HH:mmZ'));
+    // this.checkAutoApplyActiveApplyIfActive(newStart, newEnd);
+    this.checkAutoApplyActiveApplyIfActive(startDate, endDate);
   }
 
   changeSelectingModeCallback(selectingModeFromParam) {
@@ -184,13 +189,14 @@ class DateTimeRangePicker extends React.Component {
 
   duplicateMomentTimeFromState(date, startDate) {
     let state;
+    let tz = this.props.timezone;
     if (startDate) {
       state = this.state.start;
     } else {
       state = this.state.end;
     }
-    let newDate = [date.year(), date.month(), date.date(), state.hours(), state.minutes(), state.seconds()];
-    return moment(newDate);
+    let newDate = [date.tz(tz).year(), date.tz(tz).month(), date.tz(tz).date(), state.hours(), state.minutes(), state.seconds()];
+    return moment(newDate).tz(tz);
   }
 
   timeChangeCallback(newHour, newMinute, mode) {
@@ -261,13 +267,13 @@ class DateTimeRangePicker extends React.Component {
 
   dateTextFieldCallback(mode) {
     if (mode === 'start') {
-      let newDate = moment(this.state.startLabel, this.state.momentFormat);
+      let newDate = moment(this.state.startLabel, this.state.momentFormat).tz(this.props.timezone);
       let isValidNewDate = newDate.isValid();
       let isSameOrBeforeEnd = newDate.isSameOrBefore(this.state.end, 'second');
       let isAfterEndDate = newDate.isAfter(this.state.end);
       this.updateDate(mode, newDate, isValidNewDate, isSameOrBeforeEnd, isAfterEndDate, 'start', 'startLabel');
     } else {
-      let newDate = moment(this.state.endLabel, this.state.momentFormat);
+      let newDate = moment(this.state.endLabel, this.state.momentFormat).tz(this.props.timezone);
       let isValidNewDate = newDate.isValid();
       let isBeforeStartDate = newDate.isBefore(this.state.start);
       let isSameOrAfterStartDate = newDate.isSameOrAfter(this.state.start, 'second');

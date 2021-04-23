@@ -213,7 +213,7 @@ DateTimeRangeContainer.propTypes = {
   leftMode: PropTypes.bool,
   standalone: PropTypes.bool,
   twelveHoursClock: PropTypes.bool,
-  timezone: PropTypes.string,
+  timezone: PropTypes.string.isRequired,
 };
 
 export default DateTimeRangeContainer;
