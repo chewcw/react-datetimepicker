@@ -57,16 +57,16 @@ class DateTimeRangePicker extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    let isDifferentMomentObject = !this.props.start.isSame(prevProps.start) || !this.props.end.isSame(prevProps.end);
-    let isDifferentTime = this.props.start.format('DD-MM-YYYY HH:mm') !== prevProps.start.format('DD-MM-YYYY HH:mm') || this.props.end.format('DD-MM-YYYY HH:mm') !== prevProps.end.format('DD-MM-YYYY HH:mm')
-    if (isDifferentMomentObject || isDifferentTime) {
-      this.setState({
-        start : this.props.start,
-        end : this.props.end
-      },
-        this.updateStartEndAndLabels(this.props.start, this.props.end, true)
-      )
-    }
+    // let isDifferentMomentObject = !this.props.start.isSame(prevProps.start) || !this.props.end.isSame(prevProps.end);
+    // let isDifferentTime = this.props.start.format('DD-MM-YYYY HH:mm') !== prevProps.start.format('DD-MM-YYYY HH:mm') || this.props.end.format('DD-MM-YYYY HH:mm') !== prevProps.end.format('DD-MM-YYYY HH:mm')
+    // if (isDifferentMomentObject || isDifferentTime) {
+    //   this.setState({
+    //     start : this.props.start,
+    //     end : this.props.end
+    //   },
+    //     this.updateStartEndAndLabels(this.props.start, this.props.end, true)
+    //   )
+    // }
   }
 
   applyCallback() {
